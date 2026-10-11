@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b5ca8">
+  <title>BrailleBridge | E-Braille Translation</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="site-shell">
+    <header class="topbar">
+      <a class="logo" href="#home" aria-label="BrailleBridge Home"><span class="logo-icon" aria-hidden="true">⠿</span><span>Braille<span class="logo-light">Bridge</span></span></a>
+      <nav aria-label="Main navigation">
+        <a href="#home" class="nav-link active" data-nav="home">Home</a>
+        <a href="#learn" class="nav-link" data-nav="learn">Learn Braille</a>
+        <a href="#about" class="nav-link" data-nav="about">About</a>
+      </nav>
+      <button class="avatar" id="profileButton" aria-label="Project profile information" title="MDP project profile">●</button>
+    </header>
+
+    <main>
+      <section class="view" id="brailleView" aria-labelledby="brailleHeading">
+        <div class="heading-box"><span class="overline">IMAGE RECOGNITION</span><h1 id="brailleHeading">Braille to Text Translator</h1><p>Upload an image, translate Braille, and listen to the result.</p></div>
+        <div class="content-grid">
+          <div class="panel upload-panel">
+            <div class="panel-head"><h2>Upload Braille Image</h2></div>
+            <button type="button" class="dropzone" id="dropZone" aria-label="Choose Braille image or drop it here">
+              <span id="dropPrompt"><span class="upload-icon" aria-hidden="true">▧</span><strong>Upload Braille Image</strong><small>Drag &amp; drop or click to browse</small><span class="filetypes">PNG, JPG or WEBP</span></span>
+              <img id="imagePreview" alt="Preview of selected Braille image" hidden>
+            </button>
+            <input type="file" id="imageInput" accept="image/png,image/jpeg,image/webp,image/bmp" hidden>
+            <button class="btn btn-primary btn-full" id="translateImage">Translate Image <span aria-hidden="true">→</span></button>
+            <p class="status-text" id="imageStatus" role="status">For best results, use a clear, straight image with dark dots on a light background.</p>
+          </div>
+          <div class="panel result-panel">
+            <div class="panel-head"><h2>Translated Text</h2><button class="icon-button" id="speakText" title="Read translated text aloud" aria-label="Read translated text aloud"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Zm12-1a6 6 0 0 1 0 8m2-11a10 10 0 0 1 0 14"/></svg></button></div>
+            <textarea id="translatedText" aria-label="Translated text" placeholder="Your translated text will appear here..." readonly></textarea>
+            <div class="button-row end"><button class="btn btn-outline" id="editResult">Edit Text</button><button class="btn btn-outline" id="copyResult">Copy Text</button><button class="btn btn-outline" id="saveText">Save as .txt File</button></div>
+          </div>
+        </div>
+        <button class="switch-button" id="goText">Switch to Text to Braille <span aria-hidden="true">→</span></button>
+      </section>
+
+      <section class="view" id="textView" hidden aria-labelledby="textHeading">
+        <div class="heading-box"><span class="overline">TEXT CONVERSION</span><h1 id="textHeading">Text to Braille Translator</h1><p>Convert text to Braille and preview the solenoid bench output.</p></div>
+        <div class="panel">
+          <div class="panel-head"><h2>Text Input</h2><span class="subtle" id="characterCount">0 characters</span></div>
+          <textarea class="input-area" id="textInput" aria-label="English text" placeholder="Type your message here...">Accessibility</textarea>
+          <div class="panel-action"><button class="btn btn-primary btn-full" id="translateText">Translate <span aria-hidden="true">→</span></button></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2>Braille Preview</h2><span class="subtle">English Grade 1</span></div>
+          <div class="braille-preview"><p id="unicodeOutput" aria-live="polite"></p><div id="cellPreview" class="cell-preview" aria-label="Visual Braille cells"></div></div>
+          <div class="button-row end"><button class="btn btn-outline" id="clearText">Clear</button><button class="btn btn-outline" id="downloadBraille">Download Braille</button><button class="btn btn-outline" id="saveBrf">Save as .brf File</button></div>
+        </div>
+        <div class="panel bench-panel">
+          <div class="panel-head"><h2>Braille Bench Output</h2><span class="status-pill"><span class="pulse-dot"></span> Simulation mode</span></div>
+          <div class="bench-content">
+            <div class="bench-device" aria-label="Simulated six-dot solenoid bench display">
+              <div class="device-header"><span>BR<span class="device-emphasis">IDGE</span> / BENCH SIMULATOR</span><span>6-PIN CELL</span></div>
+              <div class="device-main"><div id="benchDots" class="bench-dots"></div><div class="device-readout"><small>CURRENT CHARACTER</small><strong id="benchCharacter">A</strong><span id="pinPattern">Pins raised: 1</span></div></div>
+              <div class="device-footer"><span><i class="tiny-led"></i> PINS ACTIVE: <b id="pinCount">0 / 6</b></span><span id="positionText">1 / 1</span></div>
+            </div>
+            <div class="bench-controls"><h3>Bench Controls</h3><p>Preview each cell and test how the solenoid pins would rise and lower.</p><div class="control-pair"><button class="btn btn-outline" id="previousCell">← Previous</button><button class="btn btn-outline" id="nextCell">Next →</button></div><div class="control-pair"><button class="btn btn-primary" id="testCycle">Test Cycle</button><button class="btn btn-outline" id="resetBench">Reset Bench</button></div><p id="benchStatus" class="status-text" role="status">Ready for simulation.</p></div>
+          </div>
+        </div>
+        <button class="switch-button" id="goBraille"><span aria-hidden="true">←</span> Switch to Braille to Text</button>
+      </section>
+
+      <section class="view info-view" id="learnView" hidden><div class="heading-box"><span class="overline">QUICK REFERENCE</span><h1>Learn Braille</h1><p>Discover the six-dot Braille alphabet.</p></div><div class="panel"><div class="panel-head"><h2>English Braille Alphabet</h2></div><p class="info-copy">A Braille cell contains six possible raised dots: 1–3 on the left and 4–6 on the right. The chart below shows Grade 1 letters.</p><div id="alphabetGrid" class="alphabet-grid"></div></div><button class="switch-button" id="returnHome">← Back to Translator</button></section>
+      <section class="view info-view" id="aboutView" hidden><div class="heading-box"><span class="overline">MDP PROJECT</span><h1>About BrailleBridge</h1><p>Making digital communication more accessible.</p></div><div class="panel about-panel"><h2>Smartphone-Integrated Text-to-Speech System for an E-Braille Bench</h2><p>BrailleBridge is a student project prototype that converts typed English to Braille, experiments with recognizing photographed Braille, and speaks translated text aloud. The bench is currently a visual simulation. Physical ESP32 and solenoid integration is planned for a later phase.</p><button class="btn btn-primary" id="aboutBack">Back to Translator</button></div></section>
+    </main>
+  </div>
+</body>
+</html>
